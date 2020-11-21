@@ -46,11 +46,77 @@ public class Main
             }
         }
 
+        }
+
+        System.out.print("Your word is " + word);
+        try
+        {
+            Thread.sleep(3000);
+            System.out.println("\r                                                                                                                                                                                                                     ");
+        }
+        catch (InterruptedException e){
+            e.printStackTrace();
+        }
+
+        //call method
+        hangman(word, scan);
+
+    }
+    public static void hangman(String secretWord , Scanner scan)
+    {
+        //guessedLetters['p'-'a'] = true;
+        //guessedLetters['P'-'A' + 26] = true;
+
+        boolean[] guessedLetters = new boolean[52];
+        String guess = scan.nextLine();
+        // TODO: Input validation!
+        if(guess.length() == 1)
+        {
+            /*
+                TODO:
+                  - check if the letter has already been guessed >
+                  - if so, add a strike
+                  - if letter hasn't been guessed >
+                  - mark it as guessed
+
+
+             */
+        }
+        else {
+            /*
+            TODO: If whole word is guessed
+                - check if guessed = actual word
+                -if so, guesser wins game
+             */
+        }
+
+        boolean wordCorrect = true;
+        for (int i = 0; i < secretWord.length(); i++) {
+             char temp = secretWord.charAt(i);
+             if(Character.isUpperCase(temp)){
+                 if(guessedLetters[temp- 'A' + 26])
+                     System.out.print(temp);
+                 else{
+                     System.out.print("_");
+                     wordCorrect = false;
+                 }
+
+             }
+            else if(Character.isLowerCase(temp)){
+                if(guessedLetters[temp- 'a'])
+                    System.out.print(temp);
+                else {
+                    System.out.print("_");
+                    wordCorrect = false;
+                }
+            }
+            else if((int)(temp) == 32)
+            {
+                System.out.print(" ");
+            }
 
 
         }
-
-        System.out.println(word);
     }
 
 }

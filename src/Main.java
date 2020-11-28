@@ -58,65 +58,114 @@ public class Main
             e.printStackTrace();
         }
 
+        for (int i = 0; i < 50; i++) {
+            System.out.println();
+        }
+
+
         //call method
-        hangman(word, scan);
+        hangman(word, scan, 10);
 
     }
-    public static void hangman(String secretWord , Scanner scan)
+    public static void hangman(String secretWord , Scanner scan, int numberOfStrikes)
     {
         //guessedLetters['p'-'a'] = true;
         //guessedLetters['P'-'A' + 26] = true;
 
         boolean[] guessedLetters = new boolean[52];
-        String guess = scan.nextLine();
-        // TODO: Input validation!
-        if(guess.length() == 1)
-        {
-            /*
-                TODO:
-                  - check if the letter has already been guessed >
-                  - if so, add a strike
-                  - if letter hasn't been guessed >
-                  - mark it as guessed
+        int strike = 0;
+        boolean wordCorrect = false;
 
+        while(!wordCorrect && strike < numberOfStrikes) {
 
-             */
-        }
-        else {
-            /*
-            TODO: If whole word is guessed
-                - check if guessed = actual word
-                -if so, guesser wins game
-             */
-        }
+            System.out.print("Guess a letter or word >>> ");
+            String guess = scan.nextLine();
+            while (!validateGuess(guess)) {
+                System.out.print("Error! Please enter a valid guess! >>>");
+                guess = scan.nextLine();
+            }
 
-        boolean wordCorrect = true;
-        for (int i = 0; i < secretWord.length(); i++) {
-             char temp = secretWord.charAt(i);
-             if(Character.isUpperCase(temp)){
-                 if(guessedLetters[temp- 'A' + 26])
-                     System.out.print(temp);
-                 else{
-                     System.out.print("_");
-                     wordCorrect = false;
-                 }
+            if (guess.length() == 1) {
 
-             }
-            else if(Character.isLowerCase(temp)){
-                if(guessedLetters[temp- 'a'])
-                    System.out.print(temp);
-                else {
-                    System.out.print("_");
-                    wordCorrect = false;
+                if (guessedLetters[Character.toLowerCase(guess.charAt(0)) - 'a'] || guessedLetters[Character.toUpperCase(guess.charAt(0)) - 'A' + 26]) {
+                    strike++;
+                    System.out.println("You've already guessed this letter! You have " + strike + " strikes!");
+
+                } else {
+                    guessedLetters[Character.toLowerCase(guess.charAt(0)) - 'a'] = true;
+                    guessedLetters[Character.toUpperCase(guess.charAt(0)) - 'A' + 26] = true;
+                    boolean ifletterguessed = false;
+                    for (int i = 0; i < secretWord.length(); i++) {
+                        if (Character.toUpperCase(guess.charAt(0)) == Character.toUpperCase(secretWord.charAt(i)))
+                            ifletterguessed = true;
+                    }
+                    if (!ifletterguessed) {
+                        strike++;
+                        System.out.println("Wrong letter! You have " + strike + " strikes!");
+                    }
+                }
+            } else {
+
+                if (guess.equalsIgnoreCase(secretWord)) {
+                    wordCorrect = true;
+                    break;
+                } else {
+                    strike++;
+                    System.out.println("Wrong word! You have " + strike + " strikes!");
                 }
             }
-            else if((int)(temp) == 32)
+
+            wordCorrect = true;
+            for (int i = 0; i < secretWord.length(); i++) {
+                char temp = secretWord.charAt(i);
+                if (Character.isUpperCase(temp)) {
+                    if (guessedLetters[temp - 'A' + 26])
+                        System.out.print(temp + " ");
+                    else {
+                        System.out.print("_ ");
+                        wordCorrect = false;
+                    }
+
+                } else if (Character.isLowerCase(temp)) {
+                    if (guessedLetters[temp - 'a'])
+                        System.out.print(temp + " ");
+                    else {
+                        System.out.print("_ ");
+                        wordCorrect = false;
+                    }
+                } else if ((int) (temp) == 32) {
+                    System.out.print("  ");
+                }
+            }
+            System.out.println();
+        }
+        if(wordCorrect)
+        {
+            System.out.println("CONGRATULATIONS! YOU WON WITH " + strike + " STRIKES!");
+        }
+        else
+        {
+            System.out.println("YOU LOST! IMAGINE WINNING, COULDN'T BE YOU! THE WORD WAS " + secretWord);
+        }
+    }
+    public static boolean validateGuess(String guess)
+    {
+        guess = guess.trim();
+        boolean checkLetter = guess.length() > 0;
+        for (int i = 0; i < guess.length() && checkLetter; i++) {
+            if(Character.isLetter(guess.charAt(i))) {
+
+            }
+            else if (Character.isWhitespace(guess.charAt(i))){
+
+            }
+            else
             {
-                System.out.print(" ");
+                checkLetter = false;
             }
 
-
         }
+        return checkLetter;
     }
 
 }
